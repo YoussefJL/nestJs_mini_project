@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsString,MinLength,MaxLength,ValidationArguments } from 'class-validator';
+import { IsEnum, IsString,MinLength,MaxLength,ValidationArguments } from 'class-validator';
+import { TodoStatusEnum } from '../enum';
 
 export class todoDTO {
   @IsString()
@@ -24,5 +25,7 @@ export class todoDTO {
   })
   description: string;
 
+  @IsEnum(TodoStatusEnum)
+  status: TodoStatusEnum;
 
 }

@@ -1,8 +1,10 @@
 import { Controller, Get, Post,Body,Delete,Param,Put,Patch} from '@nestjs/common';
-import { TodoModule} from "./TodoModel";
 import { todoDTO } from "./DTO/todoDTO";
 import { updateDTO } from "./DTO/updateDTO";
 import { TodoService } from './todo.service';
+import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
+import { TodoEntity } from './TodoEntity';
+
 @Controller('todo')
 export class TodoController {
   constructor (private todoService:TodoService){
@@ -14,10 +16,17 @@ export class TodoController {
     return this.todos;
   } */
 
-  @Get()
+
+
+
+  
+  //return all the todos
+  @Get('alltodos')
   getTodobD(){
     return this.todoService.getTodos();
   }
+
+  //return a specific todo
   @Get(':id')
   getTodoElement(@Param("id") id){
     return this.todoService.getTodo(id);
@@ -38,6 +47,9 @@ export class TodoController {
     return todo;
   } */
 
+
+
+  //add a todo
   @Post('dbAdd')
     async addTodo(
       @Body() Todo:todoDTO
@@ -82,27 +94,49 @@ export class TodoController {
     return (`The Todo with the id ${id} is updated successfully.`);
   } */
 
+
+
+
+  //update a todo
   @Put(':id')
   updateTodo(@Param('id') id, @Body() updateDTO: updateDTO) {
     return this.todoService.updateTodo(id,updateDTO);
 
   }
 
+  //delete a todo
   @Delete(':id')
   deleteTodo(@Param("id") id){
     return this.todoService.deleteTodo(id);
   }
 
+  //soft delete for a todo
   @Delete('softdelete/:id')
   deleteTodoSoft(@Param('id') id){
     return this.todoService.softDeleteTodo(id);
   }
 
+  //restore a todo
   @Post('restore/:id')
   restoreSection(@Param('id') id){
     return this.todoService.restoreSection(id);
   }
 
+  //count by status
+  @Get()
+  async CountByStatut() {
+    {
+      return await this.todoService.countByStatus();
+    }
+  }
 
-
+  //return todo by the id
+  @Get('todoById/:id')
+  async findtodoById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<TodoEntity[]> {
+    {
+      return await this.todoService.getTodoById(id);
+    }
+  }
 }
